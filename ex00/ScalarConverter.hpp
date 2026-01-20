@@ -5,12 +5,10 @@
 
 class ScalarConverter
 {
-public:
+private:
 	ScalarConverter( void );
-	ScalarConverter(ScalarConverter &&) = default;
-	ScalarConverter(const ScalarConverter &) = default;
-	ScalarConverter &operator=(ScalarConverter &&) = default;
-	ScalarConverter &operator=(const ScalarConverter &) = default;
+	ScalarConverter( const ScalarConverter& copy);
 	~ScalarConverter( void );
+public:
 	static void convert(const std::string& literal);
 };
