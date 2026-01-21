@@ -1,10 +1,9 @@
 #include "ScalarConverter.hpp"
 #include <cctype>
 #include <iostream>
-#include <time.h>
+#include <cerrno>
 #include <cstdlib>
 #include <limits>
-
 
 /*
     the fucking types are 
@@ -15,7 +14,6 @@
 5) double
 */
 
-
 static bool isPseudoLiteral(const std::string& s)
 {
     return (s == "nan" || s == "nanf" ||
@@ -23,20 +21,38 @@ static bool isPseudoLiteral(const std::string& s)
             s == "+inff" || s == "-inff");
 }
 
+static void printdouble(double value, bool ispesdo)
+{
+    std::cout << "Double: ";
+    if(ispesdo)
+    {
+        if(value != value)
+            std::cout << "nan" << std::endl;
+        else if(value > 0)
+            std::cout << "+inf" << std::endl;
+        else
+            std::cout << "-inf" << std::endl;
+        return ;
+    }
+    if(value == static_cast<int>(value))
+        std::cout << value << ".0" << std::endl;
+    else
+        std::cout << value << std::endl;
+}
 
 static void printchar(double value, bool ispesdo)
 {
     std::cout << "char: ";
 
-    if(value < std::numeric_limits<char>::min() || value > std::numeric_limits<char>::max() || ispesdo)
+    if (ispesdo || value < 0 || value > 127)
     {
-        std::cout << "is Impossible" << std::endl;
-        return ;
-    }
+        std::cout << "impossible\n";
+        return;
+    }    
     char c = static_cast<char>(value);
-    if(!std::isprint(c))
+    if (!std::isprint(static_cast<unsigned char>(c)))
     {
-        std::cout << "is not desplable" << std::endl;
+        std::cout << "non displayable" << std::endl;
         return ;
     }
     std::cout << "'" << c << "'" << std::endl;
@@ -90,6 +106,48 @@ bool parse(const std::string& s, double& value, bool& isPseudo)
     return false;
 }
 
+static void printfloat(double value, bool ispesdo)
+{
+    std::cout << "Float: ";
+    if(ispesdo)
+    {
+        if(value != value)
+            std::cout << "nanf" << std::endl;
+        else if(value > 0)
+            std::cout << "+inff" << std::endl;
+        else
+            std::cout << "-inff" << std::endl;
+        return ;
+    }
+    if(value < -std::numeric_limits<float>::max() || value > std::numeric_limits<float>::max())
+    {
+        std::cout << "Impossible" << std::endl;
+        return;
+    }
+    float f = static_cast<float>(value);
+    if(f == static_cast<int>(f))
+        std::cout << f << ".0f" << std::endl;
+    else
+        std::cout << f << "f" << std::endl;
+}
+
+void printint(double value, bool ispesdo)
+{
+    std::cout << "Int: ";
+    if(ispesdo)
+    {
+        std::cout << "Impossible" <<std::endl;
+        return ;
+    }
+    if (value < std::numeric_limits<int>::min() ||  value > std::numeric_limits<int>::max())
+    {
+        std::cout << "impossible" << std::endl;
+        return;
+    }
+    int i = static_cast<int>(value);
+    std::cout << i << std::endl;
+}
+
 void ScalarConverter::convert(const std::string& literal)
 {
     double value;
@@ -104,8 +162,8 @@ void ScalarConverter::convert(const std::string& literal)
         return;
     }
 
-    // printChar(value, isPseudo);
-    // printInt(value, isPseudo);
-    // printFloat(value, isPseudo);
-    // printDouble(value, isPseudo);
+    printchar(value, isPseudo);
+    printint(value, isPseudo);
+    printfloat(value, isPseudo);
+    printdouble(value, isPseudo);
 }
