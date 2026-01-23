@@ -6,7 +6,7 @@
 #include <limits>
 
 /*
-    the fucking types are 
+    the types are 
 1) pseudo literals (nan, inf…)
 2) char
 3) int
