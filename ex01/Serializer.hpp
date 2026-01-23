@@ -1,7 +1,8 @@
 #pragma once
 
 #include <iostream>
-#include <cstdint>
+#include <stdint.h>
+
 
 struct Data;
 

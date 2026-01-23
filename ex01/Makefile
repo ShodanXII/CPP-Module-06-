@@ -3,12 +3,12 @@ NAME = convert
 CXX = c++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRCS = serializer.cpp main.cpp
+SRCS = Serializer.cpp main.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS) serializer.hpp Data.hpp
+$(NAME): $(OBJS) Serializer.hpp Data.hpp
 	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
 
 clean:
