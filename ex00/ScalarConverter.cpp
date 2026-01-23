@@ -43,7 +43,6 @@ static void printdouble(double value, bool ispesdo)
 static void printchar(double value, bool ispesdo)
 {
     std::cout << "char: ";
-
     if (ispesdo || value < 0 || value > 127)
     {
         std::cout << "impossible\n";
@@ -63,23 +62,17 @@ bool parse(const std::string& s, double& value, bool& isPseudo)
     char* end;
 
     isPseudo = false;
-
-    // 1) Pseudo literals
     if (isPseudoLiteral(s))
     {
         isPseudo = true;
         value = std::strtod(s.c_str(), 0);
         return true;
     }
-
-    // 2) Char literal (single non-digit)
     if (s.length() == 1 && !std::isdigit(s[0]))
     {
         value = static_cast<double>(s[0]);
         return true;
     }
-
-    // 3) Int literal
     errno = 0;
     long l = std::strtol(s.c_str(), &end, 10);
     if (*end == '\0' && errno != ERANGE)
@@ -87,8 +80,6 @@ bool parse(const std::string& s, double& value, bool& isPseudo)
         value = static_cast<double>(l);
         return true;
     }
-
-    // 4) Float literal (must end with 'f')
     if (s.length() > 1 && s[s.length() - 1] == 'f')
     {
         errno = 0;
@@ -96,13 +87,10 @@ bool parse(const std::string& s, double& value, bool& isPseudo)
         if (*end == '\0' && errno != ERANGE)
             return true;
     }
-
-    // 5) Double literal
     errno = 0;
     value = std::strtod(s.c_str(), &end);
     if (*end == '\0' && errno != ERANGE)
         return true;
-
     return false;
 }
 
@@ -161,7 +149,6 @@ void ScalarConverter::convert(const std::string& literal)
         std::cout << "double: impossible\n";
         return;
     }
-
     printchar(value, isPseudo);
     printint(value, isPseudo);
     printfloat(value, isPseudo);
